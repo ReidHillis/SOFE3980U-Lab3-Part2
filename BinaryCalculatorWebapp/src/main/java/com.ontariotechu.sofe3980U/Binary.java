@@ -10,32 +10,40 @@ public class Binary
 	/**
 	* A constructor that generates a binary object.
 	*
-	* @param number a String of the binary values. It should conatins only zeros or ones with any length and order. otherwise, the value of "0" will be stored.   Trailing zeros will be excluded and empty string will be considered as zero.
+	* @param number a String of the binary values. It should contain only zeros or ones with any length and order. otherwise, the value of "0" will be stored.   Trailing zeros will be excluded and empty string will be considered as zero.
 	*/
-    public Binary(String number) {
+	public Binary(String number) {
+		if (number == null || number.isEmpty()) {
+			this.number = "0"; // Default to "0" for null or empty input
+			return;
+		}
+	
+		// Validate the binary string (only '0' or '1' allowed)
 		for (int i = 0; i < number.length(); i++) {
-			// check each character if it's not 0 or 1
-			char ch=number.charAt(i);
-			if(ch!='0' && ch!='1') {
-				number="0"; // if not store "0" and end the function
+			char ch = number.charAt(i);
+			if (ch != '0' && ch != '1') {
+				this.number = "0"; // Default to "0" for invalid input
 				return;
 			}
 		}
-		// remove any trailing zeros
+	
+		// Remove leading zeros
 		int beg;
 		for (beg = 0; beg < number.length(); beg++) {
-			if (number.charAt(beg)!='0')
+			if (number.charAt(beg) != '0') {
 				break;
+			}
 		}
-		//beg has the index of the first non zero digit in the number
-		this.number=number.substring(beg); // exclude the trailing zeros if any
-		// uncomment the following code
+	
+		// If all digits are '0', ensure number is "0"
+		this.number = (beg == number.length()) ? "0" : number.substring(beg);
+	
 		
-		if(this.number=="") { // replace empty strings with a single zero
-			this.number="0";
+		if (this.number.isEmpty()) { // replace empty strings with a single zero
+			this.number = "0";
 		}
-		
-    }
+  		
+	}
 	/**
 	* Return the binary value of the variable
 	*
@@ -75,8 +83,54 @@ public class Binary
 			sum=sum%2;  // the resultant digit
 			num3 =( (sum==0)? "0":"1")+num3; //convert sum to string and append it to num3
 		}
-		Binary result=new Binary(num3);  // create a binary object with the calculated value.
+		Binary result = new Binary(num3);  // create a binary object with the calculated value.
 		return result;
 		
+	}
+
+	public static Binary or(Binary a, Binary b) {
+		String x = a.getValue();
+		String y = b.getValue();
+		int maxLength = Math.max(x.length(), y.length());
+
+		x = String.format("%" + maxLength + "s", x).replace(' ', '0');
+		y = String.format("%" + maxLength + "s", y).replace(' ', '0');
+		StringBuilder result = new StringBuilder();
+
+		for (int i = 0; i < maxLength; i++)
+			result.append((x.charAt(i) == '1' || y.charAt(i) == '1') ? '1' : '0');
+
+		Binary result2 = new Binary(result.toString());
+		return result2;
+	}
+
+	public static Binary and(Binary a, Binary b) {
+		String x = a.getValue();
+		String y = b.getValue();
+		int maxLength = Math.max(x.length(), y.length());
+
+		x = String.format("%" + maxLength + "s", x).replace(' ', '0');
+		y = String.format("%" + maxLength + "s", y).replace(' ', '0');
+		StringBuilder result = new StringBuilder();
+
+		for (int i = 0; i < maxLength; i++) 
+			result.append((x.charAt(i) == '1' && y.charAt(i) == '1') ? '1' : '0');
+
+		Binary result2 = new Binary(result.toString());
+		return result2;
+	}
+	
+	public static Binary multiply(Binary a, Binary b) {
+		Binary result = new Binary("0");
+		String multiplier = b.getValue();
+
+		for (int i = multiplier.length() - 1; i >= 0; i--) {
+			if (multiplier.charAt(i) == '1') {
+				Binary shifted = new Binary(a.getValue() + "0".repeat(multiplier.length() - 1 - i));
+				result = add(result, shifted);
+			}
+		}
+
+		return result;
 	}
 }	
