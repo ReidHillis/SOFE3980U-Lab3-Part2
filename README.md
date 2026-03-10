@@ -68,7 +68,7 @@
 
    ![sq4_4](figures/sq4_4.jpg)
    
-5. Repeat the previous step to install **Maven Integration** and  **GitHub** plugins.
+5. Repeat the previous step to install **Maven Integration** and  **GitHub** plugins
 6. Configure GitHub Plugin
    1. Select **Dashboard**, **Manage Jenkins**, then **System**. Scroll down to the **GitHub** section. Click the **Add GitHub Server** button. Name it, **github**. Finally, click **Add**.
 
